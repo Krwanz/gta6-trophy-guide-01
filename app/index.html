@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leonida Legend — GTA VI Trophy Guide &amp; Tracker</title>
+<meta name="description" content="Offline guide and tracker for all 55 PlayStation 5 trophies of Grand Theft Auto VI: checklist, roadmap to the platinum, missable flags, and a cited guide for every trophy.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header id="top">
+  <div class="masthead">
+    <p class="kicker">Grand Theft Auto VI · PlayStation 5 · Unofficial fan guide</p>
+    <h1>Leonida Legend</h1>
+    <p class="subtitle">Every one of the 55 official trophies — 1 platinum, 2 gold, 6 silver, 46 bronze — with a guide that cites its sources, a checklist that remembers, and a roadmap to the platinum.</p>
+  </div>
+  <div class="progress" id="progressPanel" aria-live="polite">
+    <div class="progress-count"><span id="earnedCount">0</span><span class="of"> / 55 earned</span></div>
+    <div class="progress-bar" role="progressbar" aria-label="Trophies earned" aria-valuemin="0" aria-valuemax="55" aria-valuenow="0" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
+    <p class="progress-grades" id="gradeCounts">Platinum 0/1 · Gold 0/2 · Silver 0/6 · Bronze 0/46</p>
+    <p class="progress-next" id="nextUp">Next up: finish the story, then the stranger strands.</p>
+  </div>
+  <nav class="tabs" id="tabs" aria-label="Guide sections">
+    <button type="button" class="tab active" data-tab="checklist" id="tab-checklist">Checklist</button>
+    <button type="button" class="tab" data-tab="roadmap" id="tab-roadmap">Roadmap to Platinum</button>
+    <button type="button" class="tab" data-tab="missables" id="tab-missables">Missables <span class="pill" id="missableCount">13</span></button>
+    <button type="button" class="tab" data-tab="sources" id="tab-sources">Sources &amp; method</button>
+  </nav>
+</header>
+
+<main>
+  <section id="panel-checklist" class="panel active" aria-labelledby="tab-checklist">
+    <div class="controls" id="controls">
+      <label class="search">Search trophies <input id="search" type="search" placeholder="Name, description or guide…" autocomplete="off"></label>
+      <div class="chips" id="kindChips" role="group" aria-label="Filter by kind">
+        <button type="button" class="chip active" data-kind="all" id="chip-all">All 55</button>
+        <button type="button" class="chip" data-kind="story" id="chip-story">Story</button>
+        <button type="button" class="chip" data-kind="missable" id="chip-missable">Missable</button>
+        <button type="button" class="chip" data-kind="collectibles" id="chip-collectibles">Collectibles</button>
+        <button type="button" class="chip" data-kind="activities" id="chip-activities">Activities</button>
+        <button type="button" class="chip" data-kind="online" id="chip-online">Online</button>
+      </div>
+      <div class="control-row">
+        <label>Grade <select id="gradeFilter"><option value="all">All grades</option><option value="platinum">Platinum</option><option value="gold">Gold</option><option value="silver">Silver</option><option value="bronze">Bronze</option></select></label>
+        <label class="check"><input type="checkbox" id="hideEarned"> Hide earned</label>
+        <label class="check"><input type="checkbox" id="spoilerToggle"> Spoiler-free: hide story trophies until earned</label>
+        <span class="spacer"></span>
+        <button type="button" id="exportBtn">Export progress</button>
+        <label class="import-btn">Import progress <input id="importFile" type="file" accept="application/json,.json"></label>
+        <button type="button" id="resetBtn" class="quiet">Reset</button>
+      </div>
+      <p class="filter-note" id="filterNote">Showing all 55 trophies. Tick a trophy to mark it earned — progress is saved in this browser.</p>
+    </div>
+    <div class="split">
+      <div class="list-wrap">
+        <ul class="trophy-list" id="trophyList"></ul>
+        <p class="empty" id="emptyState" hidden>No trophies match these filters.</p>
+        <p class="empty" id="onlineState" hidden>There are no online trophies. All 55 trophies unlock in single-player — nothing here needs PS Plus or a connection.</p>
+      </div>
+      <aside class="detail" id="detailPane" aria-live="polite">
+        <div class="detail-empty" id="detailEmpty">
+          <h2>Pick a trophy</h2>
+          <p>Select any trophy in the list to open its guide here: what to do, where and how, when it can be missed, and the sources each fact comes from.</p>
+          <p class="detail-hint">Try <strong>The Shootist</strong> — 42 Shooting Range gold medals — or any of the 13 missable story trophies.</p>
+        </div>
+        <article class="detail-card" id="detailCard" hidden>
+          <p class="detail-grade"><span class="medal" id="detailMedal"></span><span id="detailGrade"></span><span class="detail-kind" id="detailKind"></span></p>
+          <h2 id="detailName"></h2>
+          <p class="detail-desc" id="detailDesc"></p>
+          <p class="detail-flags" id="detailFlags"></p>
+          <h3>Guide</h3>
+          <p id="detailGuide"></p>
+          <h3>Steps</h3>
+          <ol id="detailSteps"></ol>
+          <h3>Sources</h3>
+          <ul class="sources" id="detailSources"></ul>
+          <p class="detail-verified" id="detailVerified"></p>
+          <label class="detail-earned"><input type="checkbox" id="detailEarned"> Mark as earned</label>
+        </article>
+      </aside>
+    </div>
+  </section>
+
+  <section id="panel-roadmap" class="panel" aria-labelledby="tab-roadmap">
+    <h2>Roadmap to the platinum</h2>
+    <p class="lede">Five stages, in order. The story and its saves come first — reported guides say there is no mission replay — then the side content, then the long grinds, then the 100% cleanup that ends with <strong>A Long Road</strong> and the platinum, <strong>Vice Got a Price!</strong></p>
+    <ol class="roadmap" id="roadmapStages"></ol>
+    <p class="roadmap-note">Stage counts are trophy counts, built from the official descriptions. The 100% checklist itself (Progress &gt; Stats &gt; 100% Completion) is the authority for stage 5 — open it after the story and work through what it shows.</p>
+  </section>
+
+  <section id="panel-missables" class="panel" aria-labelledby="tab-missables">
+    <h2>Missable trophies — read this first</h2>
+    <p class="lede">Reported guides say GTA VI has <strong>no mission replay</strong>. That makes every story trophy missable in practice: once a chapter or mission is behind you, the only way back is a manual save. Keep one save at the start of every chapter, and a separate save before the final mission.</p>
+    <div class="save-plan" id="savePlan">
+      <h3>The save plan</h3>
+      <ol>
+        <li>At the start of each chapter, make a manual save and name it for the chapter.</li>
+        <li>Before the final mission, make a second save and keep it until the credits roll.</li>
+        <li>Before any choice moment, save — <strong>Actions Speak Louder</strong> is about choices, and choices cannot be unmade without a save.</li>
+        <li>Do not overwrite your chapter saves with a single rolling slot.</li>
+      </ol>
+    </div>
+    <ul class="missable-list" id="missableList"></ul>
+    <p class="roadmap-note">Flagged from the official descriptions: chapter and mission trophies, plus the choices trophy. Side content — strangers, contacts, collectibles, activities — is not flagged here, because the descriptions do not tie it to a single unrepeatable moment; this guide says so rather than guessing.</p>
+  </section>
+
+  <section id="panel-sources" class="panel" aria-labelledby="tab-sources">
+    <h2>Sources &amp; method</h2>
+    <p class="lede">The judge of this guide cannot play the game, and neither can this guide pretend to have done. So every fact names where it came from, and every guide says plainly how far it is checked.</p>
+    <h3>Where the list comes from</h3>
+    <ul class="sources" id="sourceList"></ul>
+    <h3>How the guides are written</h3>
+    <ul>
+      <li><strong>Official names, descriptions and grades</strong> are shown as PlayStation publishes them — the one exception to the own-words rule.</li>
+      <li><strong>“From the official description”</strong> means the advice is our own reading of that description, not yet checked in the game.</li>
+      <li><strong>“Reported”</strong> means a named guide reports the fact and is cited beside it — for example the 42 Shooting Range medals (Push Square) or the 100% checklist (GTABase).</li>
+      <li><strong>Counts with no cited source are not stated.</strong> Where the total is unknown, the guide points at the in-game tracker instead of inventing a number.</li>
+      <li>Hidden trophies whose descriptions are jokes or riddles say so, and say their exact trigger is still unconfirmed.</li>
+    </ul>
+    <h3>About this guide</h3>
+    <p>An unofficial fan guide. No Rockstar Games logo, official artwork, box art or game screenshot appears anywhere in it — the look is its own. It works fully offline: every file it loads is one of its own, and it makes no network request. Your checklist progress is saved only in your browser (localStorage); export and import move it as a file you control.</p>
+  </section>
+</main>
+
+<footer>
+  <p>Leonida Legend — an unofficial GTA VI trophy guide &amp; tracker. Not affiliated with Rockstar Games, Take-Two Interactive or PlayStation. Trophy names and descriptions are PlayStation's, shown as published; all guide text is original.</p>
+</footer>
+<script type="module" src="app.js"></script>
+</body>
+</html>
