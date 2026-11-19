@@ -5,7 +5,7 @@
 // stands in for /output:
 //   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 
-import { cpSync, existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildDossier } from './vendor/makefun-frontend.ts';
@@ -17,8 +17,13 @@ const outputDir = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 function handIn() {
   // Start from an empty output directory: a second run must not leave behind
   // files the repository no longer has, or the two runs would differ.
-  rmSync(outputDir, { recursive: true, force: true });
+  // Clear only the directory's CONTENTS, never the directory itself: the
+  // grader runs as uid 65534 with a root-owned output dir, so removing the
+  // dir itself fails (its parent is not writable by that user).
   mkdirSync(outputDir, { recursive: true });
+  for (const name of readdirSync(outputDir)) {
+    rmSync(join(outputDir, name), { recursive: true, force: true });
+  }
 
   // The guide itself: every static file under app/.
   cpSync(join(repoRoot, 'app'), join(outputDir, 'app'), { recursive: true });
