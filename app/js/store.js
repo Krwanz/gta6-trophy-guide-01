@@ -1,49 +1,64 @@
-// Progress store: the earned set lives in localStorage and moves as a JSON file.
-// The keys stay at v1 so a reader's saved ticks survive the v2 update; the
-// exported file carries format v2 and the app version, and v1 files still import.
-export const PROGRESS_KEY = 'leonida-legend-progress-v1';
-export const SETTINGS_KEY = 'leonida-legend-settings-v1';
-export const PROGRESS_FORMAT = 'leonida-legend-progress-v2';
+// Progress store for Leonida Legend: the earned set lives in localStorage only,
+// and can be exported to a file and imported back. Nothing leaves the browser.
 
-export function loadProgress() {
+export const STORAGE_KEY = 'leonida-legend-earned-v1';
+export const EXPORT_FILENAME = 'leonida-legend-progress.json';
+
+// Read the earned trophy ids from localStorage. A corrupt value is ignored.
+export function loadEarned() {
   try {
-    const raw = localStorage.getItem(PROGRESS_KEY);
-    const parsed = raw ? JSON.parse(raw) : [];
-    return new Set(Array.isArray(parsed) ? parsed.filter((n) => typeof n === 'string') : []);
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return new Set();
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return new Set();
+    return new Set(parsed.filter((id) => Number.isInteger(id)));
   } catch {
     return new Set();
   }
 }
 
-export function saveProgress(earnedSet) {
-  localStorage.setItem(PROGRESS_KEY, JSON.stringify([...earnedSet]));
+// Persist the earned trophy ids.
+export function saveEarned(earned) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify([...earned].sort((a, b) => a - b)));
 }
 
-export function loadSettings() {
-  try {
-    return JSON.parse(localStorage.getItem(SETTINGS_KEY) ?? '{}') ?? {};
-  } catch {
-    return {};
+// Build the export document: the earned ids plus a label so an imported file
+// can be recognised as one of ours.
+export function buildExportDocument(earned) {
+  return {
+    app: 'Leonida Legend',
+    game: 'Grand Theft Auto VI',
+    exportedAt: new Date().toISOString(),
+    earned: [...earned].sort((a, b) => a - b),
+  };
+}
+
+// Parse an imported file. Unknown ids are dropped, duplicates collapse.
+// Returns { earned, dropped } so the caller can say what was ignored.
+export function parseImportDocument(text, validIds) {
+  const parsed = JSON.parse(text);
+  const list = Array.isArray(parsed) ? parsed : parsed.earned;
+  if (!Array.isArray(list)) throw new Error('not a progress file');
+  const earned = new Set();
+  let dropped = 0;
+  for (const id of list) {
+    if (Number.isInteger(id) && validIds.has(id)) earned.add(id);
+    else dropped += 1;
   }
+  return { earned, dropped };
 }
 
-export function saveSettings(settings) {
-  localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
-}
-
-export function exportProgressFile(earnedSet) {
-  const payload = JSON.stringify({ format: PROGRESS_FORMAT, game: 'Grand Theft Auto VI', exportedAt: new Date().toISOString(), earned: [...earnedSet].sort() }, null, 2);
-  const url = URL.createObjectURL(new Blob([payload], { type: 'application/json' }));
+// Download the export document as a JSON file.
+export function downloadExport(earned) {
+  const blob = new Blob([JSON.stringify(buildExportDocument(earned), null, 2)], {
+    type: 'application/json',
+  });
+  const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = 'gta6-trophy-progress.json';
+  link.download = EXPORT_FILENAME;
+  document.body.appendChild(link);
   link.click();
+  link.remove();
   URL.revokeObjectURL(url);
-}
-
-export function parseProgressFile(text) {
-  const parsed = JSON.parse(text);
-  const names = Array.isArray(parsed) ? parsed : parsed.earned;
-  if (!Array.isArray(names)) throw new Error('Not a progress file: expected a list of trophy names.');
-  return new Set(names.filter((n) => typeof n === 'string'));
 }

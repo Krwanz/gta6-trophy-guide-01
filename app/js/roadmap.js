@@ -1,39 +1,112 @@
-// Roadmap stages and the missable reason, built from the launch guides.
-// PowerPyx's roadmap has three steps: story (60-80 hours), the 100% checklist
-// (about 100 hours), then strangers and cleanup (about 10 hours). Every trophy
-// belongs to exactly one stage, and the order is the order to earn them in.
+// The platinum roadmap for Leonida Legend: six stages in the order to play
+// them, built from the official trophy descriptions, plus the missable list.
+// Stage numbers match each trophy's "stage" in trophies.json.
+
 export const ROADMAP_STAGES = [
   {
-    title: 'Story first — 60 to 80 hours, and the one missable',
-    text: 'Play the five chapters through. The story trophies are all automatic and none of them can be missed — PowerPyx says so for every one — but do the Chapter 1 balcony meditation for Positive Mental Attitude before Chapter 1 ends: it is the only trophy that may be missable. Along the way, take optional missions as they appear (the 100% checklist wants any 100 of them), scan new vehicles with WAiNK (200 of 277 needed later) and study new animals through binoculars (100 of 255). Keep a save at the start and end of each chapter: there are 15 manual slots and no mission replay.',
-    trophyIds: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 48, 28],
+    stage: 1,
+    title: 'Story first — chapters 1 to 4 and the final mission',
+    blurb:
+      'Play the story through. Keep a manual save at the start of every chapter and one before the final mission: there is no mission replay. Meditate at Lucia\u2019s balcony spot in Chapter 1, it counts toward Positive Mental Attitude.',
   },
   {
-    title: 'The 100% checklist — about 100 hours',
-    text: 'After the story, open Progress > Stats > 100% Completion and work through what it shows. PowerPyx calls it lenient, closer to 60% true completion: 70 of 80 challenges, 15 of 18 meditations and 300 stunts, with everything required only for robberies, underwater discoveries, shooting ranges, drone races and Bret\u2019s quests. This is where A Long Road, the hardest trophy, is earned — and most of this stage\u2019s trophies pop on the way there.',
-    trophyIds: [14, 15, 16, 17, 18, 19, 29, 30, 31, 32, 35, 36, 40, 42, 43, 52, 53, 54, 55],
+    stage: 2,
+    title: 'Side characters and strangers',
+    blurb:
+      'Finish the final mission for Andy, Kenton, Billy, Randy and Tyrone, and complete 8 Strangers & Freaks mission strands across Leonida. Sweep the map between chapters so no strand is left behind.',
   },
   {
-    title: 'Strangers, contacts and cleanup — about 10 hours',
-    text: 'Strangers & Freaks is not part of the 100% checklist, so the 8 stranger strands may still be open, along with the five contact questlines (Andy, Kenton, Billy, Randy, Tyrone) and the one-off moments — the plane from VCIA, the tank at Mile Zero, the blue Banshee, the UFO after 2AM. Finish whatever the checklist left, and the platinum follows. Three trophies are still unconfirmed at launch (In The Beginning…, Bad Luck, I Guess and Ten Pin): PowerPyx lists their triggers as currently unknown, so this guide does not pretend to know them.',
-    trophyIds: [1, 20, 21, 22, 23, 24, 25, 26, 27, 33, 34, 37, 38, 39, 41, 44, 45, 46, 47, 49, 50, 51],
+    stage: 3,
+    title: 'Activities and skill challenges',
+    blurb:
+      'Sample all 9 activity types, then work the long ones: gold in all 42 Shooting Range challenges, drone race wins at all 14 locations, 20 different race wins, the fishing challenge against Cal, an arcade game and bowling.',
+  },
+  {
+    stage: 4,
+    title: 'Collectibles and exploration',
+    blurb:
+      'Meditate at all 18 spots, finish 3 card sets, WAiNK It at 100 locations, discover 100 vehicles, explore all 52 areas, buy all 8 garages and register 10 vehicles in the Scooter Bros app. One long sweep of the map covers most of this stage.',
+  },
+  {
+    stage: 5,
+    title: 'Robberies, money and one-off moments',
+    blurb:
+      'Rob the jewelry store undetected, 5 bank vaults, an armored truck and one illegal operation per gang; launder $250,000 of Marked Bills and spend $100,000 across the shops. Do the wanted-level and airport moments while you are out robbing.',
+  },
+  {
+    stage: 6,
+    title: 'Cleanup to 100% and the platinum',
+    blurb:
+      'Land 250 stunts, finish 50 challenges, then follow the in-game 100% checklist until A Long Road pops. The platinum, Vice Got a Price!, follows with it.',
   },
 ];
 
-export const MISSABLE_REASONS = {
-  28: 'The Chapter 1 balcony meditation at Jason\u2019s house is gone after Chapter 1 — and it is still unclear whether the trophy needs it. Do it when it comes up.',
-};
+// Render the six stages into the ordered list, with per-stage progress.
+export function renderRoadmap(listElement, trophies, earned) {
+  listElement.replaceChildren();
+  for (const stage of ROADMAP_STAGES) {
+    const stageTrophies = trophies.filter((trophy) => trophy.stage === stage.stage);
+    const done = stageTrophies.filter((trophy) => earned.has(trophy.id)).length;
+    const item = document.createElement('li');
+    item.className = 'stageCard';
+    item.id = `roadmap-stage-${stage.stage}`;
 
-export function stageForTrophy(trophyId) {
-  return ROADMAP_STAGES.findIndex((stage) => stage.trophyIds.includes(trophyId)) + 1;
+    const heading = document.createElement('h3');
+    const number = document.createElement('span');
+    number.className = 'stageNum';
+    number.textContent = `Stage ${stage.stage} — `;
+    heading.append(number, document.createTextNode(stage.title));
+    item.append(heading);
+
+    const blurb = document.createElement('p');
+    blurb.textContent = stage.blurb;
+    item.append(blurb);
+
+    const progress = document.createElement('p');
+    progress.className = 'stageProgress';
+    progress.textContent = `Stage ${stage.stage}: ${done} of ${stageTrophies.length} earned`;
+    item.append(progress);
+
+    const names = document.createElement('p');
+    names.className = 'stageTrophies';
+    names.textContent = stageTrophies.map((trophy) => trophy.name).join(' · ');
+    item.append(names);
+
+    listElement.append(item);
+  }
 }
 
-export function nextUpTrophy(trophies, earnedSet) {
-  for (const stage of ROADMAP_STAGES) {
-    for (const id of stage.trophyIds) {
-      const trophy = trophies.find((t) => t.id === id);
-      if (trophy && !earnedSet.has(trophy.name)) return { trophy, stage: stage.title };
-    }
+// Render the missable trophies into their section: the flag, the guide and
+// the reason it can be missed, in the trophy's own words.
+export function renderMissables(container, trophies, earned) {
+  container.replaceChildren();
+  const missables = trophies.filter((trophy) => trophy.missable === true);
+  if (missables.length === 0) {
+    const note = document.createElement('p');
+    note.className = 'missableNote';
+    note.textContent = 'No trophy on this list is flagged missable.';
+    container.append(note);
+    return;
   }
-  return null;
+  for (const trophy of missables) {
+    const card = document.createElement('article');
+    card.className = 'missableCard';
+
+    const heading = document.createElement('h3');
+    heading.textContent = `${trophy.name} — ${trophy.grade} · possibly missable`;
+    card.append(heading);
+
+    const guide = document.createElement('p');
+    guide.textContent = trophy.guide;
+    card.append(guide);
+
+    const note = document.createElement('p');
+    note.className = 'missableNote';
+    note.textContent = earned.has(trophy.id)
+      ? 'Earned — safe.'
+      : 'Not earned yet: do it during Chapter 1, before the chapter ends.';
+    card.append(note);
+
+    container.append(card);
+  }
 }

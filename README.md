@@ -1,50 +1,55 @@
 # Leonida Legend — GTA VI Trophy Guide & Tracker
 
-[![make.fun · gta6-trophy-guide-01](https://make.fun/badge/gta6-trophy-guide-01.svg)](https://make.fun/bounty/gta6-trophy-guide-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-trophy-guide-01)
-[![rank](https://make.fun/badge/gta6-trophy-guide-01/Krwanz/gta6-trophy-guide-01/rank.svg)](https://make.fun/bounty/gta6-trophy-guide-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=gta6-trophy-guide-01)
-[![reward](https://make.fun/badge/gta6-trophy-guide-01/Krwanz/gta6-trophy-guide-01/reward.svg)](https://make.fun/bounty/gta6-trophy-guide-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-trophy-guide-01)
+[![gta6-trophy-guide-01](https://make.fun/badge/gta6-trophy-guide-01.svg)](https://make.fun/c/gta6-trophy-guide-01)
+[![rank](https://make.fun/badge/gta6-trophy-guide-01/Krwanz/gta6-trophy-guide-01/rank.svg)](https://make.fun/c/gta6-trophy-guide-01)
+[![reward](https://make.fun/badge/gta6-trophy-guide-01/Krwanz/gta6-trophy-guide-01/reward.svg)](https://make.fun/c/gta6-trophy-guide-01)
 
-An offline guide and tracker for all 55 PlayStation 5 trophies of Grand Theft Auto VI: the official list with a cited guide for every trophy, a checklist that remembers, a roadmap to the platinum, and the missable trophies flagged.
-
-Entry for make.fun `gta6-trophy-guide-01`: build the best GTA 6 trophy guide.
-$250 total, 1st place $50. Deadline 2026-11-21T11:00:00Z.
+An offline guide and tracker for all **55 PlayStation 5 trophies** of Grand Theft Auto VI (1 platinum, 2 gold, 6 silver, 46 bronze, 28 hidden), built for the [gta6-trophy-guide-01 bounty](https://make.fun/c/gta6-trophy-guide-01) on make.fun.
 
 ## What it is
 
-- **Checklist** — all 55 official trophies (1 platinum, 2 gold, 6 silver, 46 bronze; 28 hidden) with their official name, description and grade. Every trophy now carries a difficulty rating (1–5) and a time estimate of its own. Tick one off and it stays ticked (localStorage); export your progress to a file and import it back.
-- **Guide pane** — every trophy has a guide in our own words: what to do, where and how, when it can be missed, with steps and the sources each fact comes from. 52 of the 55 guides are confirmed by the launch guides (PowerPyx, Push Square, GTABase); the 3 whose triggers are still unknown say so instead of inventing a method.
-- **Roadmap to the platinum** — three stages with hour estimates, from PowerPyx: story first (60–80 hours, with the one possibly missable meditation in Chapter 1), then the 100% cleanup (about 100 hours), then the stranger strands and last one-offs (about 10 hours). About 200 hours in all, one playthrough.
-- **Missables** — exactly 1 trophy flagged as possibly missable: Positive Mental Attitude, whose Chapter 1 balcony meditation is gone after Chapter 1. The first version of this guide flagged 13 story trophies as missable; the launch guides proved that wrong, and this version corrects it — plus a list of things that look missable but are not.
-- **Filters** — by kind (story, missable, collectibles, activities, online), by grade, by difficulty, by search text, and hide-earned. There are no online trophies — all 55 unlock in single-player — and the online filter says so.
-- **Spoiler setting** — hides the names and descriptions of all 28 hidden trophies (and the guide, and the next-up hint) until they are earned. The first version hid only the 18 story-kind trophies; this one hides the hidden list as PlayStation hides it.
+- **Every trophy, official and complete.** Each of the 55 trophies is shown with its official name, description and grade as Exophase and PSNProfiles list them, plus its kind (story, collectibles, activities), a hidden flag, a difficulty and time estimate, its roadmap stage, and a guide written for this page.
+- **A tracker that saves.** Tick trophies off and the progress stays in the browser (localStorage). Export it to a JSON file and import it back on any machine. A progress bar and per-kind counts show where you stand.
+- **Filters and search.** Filter by kind (story, missable, collectibles, activities, online), by grade, or search by name, mission or keyword.
+- **A spoiler setting.** Turn it on and story trophies stay masked — name, description and guide — until you earn them.
+- **A roadmap to the platinum.** Six stages in the order to play them, each with its trophies and its progress, built from the official descriptions.
+- **The missable, flagged.** Only one trophy is flagged as possibly missable by the guides that have checked: Positive Mental Attitude. The guide says why and what to do in Chapter 1.
+- **Cited guides.** Every guide names its sources beside it — Exophase, PSNProfiles, GTABase, Push Square, Output Lag, KeenGamer and others — with links where the source is a page. Where a trigger is not pinned down yet, the guide says so instead of inventing one.
 
-## How honest it is
+## The facts it is built on
 
-The game launched on 19 November 2026, and this version is built from the launch guides published that week:
+- 55 trophies, all single-player: there are no online trophies and no GTA Online mode at launch.
+- The platinum, **Vice Got a Price!**, takes about 200 hours (Output Lag; Insider Gaming), up to 300 hours or more (Push Square), with the story near 50 hours and a 4/10 difficulty (GTADB).
+- The game has no mission replay, so the roadmap tells you to keep a manual save at the start of every chapter and one before the final mission.
+- Counts are PlayStation's tracked targets as PSNProfiles lists them: 42 Shooting Range challenges, 14 drone race locations, 18 meditation spots, 100 WAiNK locations, 52 areas of Leonida, 250 stunts (397 in the game, per Push Square), 5 bank vaults, 9 gangs, 8 garages.
 
-- Names, descriptions and grades are the official list as PlayStation publishes them (via Exophase and PSNProfiles, which agree on all 55).
-- A guide marked **“reported”** cites the named launch guide that confirms the method — PowerPyx's trophy guide and roadmap (18 Nov 2026), Push Square's guide, or GTABase.
-- A guide marked **“unconfirmed”** (In The Beginning…, Bad Luck, I Guess, Ten Pin) states no method: PowerPyx lists those triggers as currently unknown.
-- Difficulty (1–5) and time are this guide's own estimates per trophy, built from PowerPyx's roadmap. The set as a whole is 4/10 and about 200 hours (PowerPyx; Push Square says 250+).
-- Counts with no cited source are **not stated** — the guide points at the in-game tracker instead of inventing a number. Cheats disable trophies and stop the game saving, so the guide warns against them on the platinum file.
-
-An unofficial fan guide: no Rockstar Games logo, official artwork, box art or game screenshot anywhere — the look is its own.
-
-## Run it
-
-Static files under `app/` — no build step, no network at run time:
+## Try it
 
 ```sh
 node serve.ts
-# open http://localhost:8080
 ```
 
-## Hand it in
+Then open http://localhost:8080. It works with the network off: every file it loads is a file under `app/`, and it makes no network request at run time.
 
-`main.ts` (Node 22, standard library only) copies `app/` and `screenshots/` to the output directory and writes `dossier.json` with the vendored `vendor/makefun-frontend.ts`:
+## Hand it in
 
 ```sh
 mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 ```
 
-Screenshots are real renders of the app in headless Chromium (1280×800, seeded with 13 of 55 earned, zero page errors): `1-checklist.jpg` (checklist with The Shootist guide open, showing difficulty, time and sources), `2-roadmap.jpg` (roadmap, 3 stages with hour estimates), `3-missables.jpg` (the one possibly missable trophy and the save plan), `4-spoiler.jpg` (spoiler setting on, hidden trophies masked).
+`main.ts` (Node 22, standard library only) copies `app/` and `screenshots/` to the output directory and writes `dossier.json` with the vendored make.fun library.
+
+## Layout
+
+- `app/index.html` — the page: hero, progress, controls, roadmap, missables, trophy list.
+- `app/app.js` — boot: loads the data, renders the tracker and wires the controls.
+- `app/js/store.js` — progress in localStorage, export and import.
+- `app/js/filters.js` — kind, grade and search filters, and the spoiler rule.
+- `app/js/roadmap.js` — the six roadmap stages and the missable list.
+- `app/data/trophies.json` — the 55 trophies with their guides and sources.
+- `app/style.css` — the dark neon Leonida look. Original art only: no Rockstar logo, official artwork, box art or game screenshots.
+- `screenshots/` — four real renders of the app: the checklist, a trophy guide open, the roadmap, and the spoiler setting at work.
+
+## License
+
+MIT — see `LICENSE`.

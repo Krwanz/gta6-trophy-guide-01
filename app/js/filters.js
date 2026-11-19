@@ -1,50 +1,68 @@
-// Filters: kind, search text, grade, difficulty, and the spoiler rule.
-// The spoiler setting hides the hidden trophies (the 28 PlayStation hides until
-// earned) until they are earned — not just the story ones.
+// Filtering, search and the spoiler rule for Leonida Legend.
+// These are pure functions over the trophy list, so the tracker logic can be
+// read and tested without the page around it.
+
+export const KINDS = ['all', 'story', 'missable', 'collectibles', 'activities', 'online'];
+
+export const KIND_LABELS = {
+  all: 'All',
+  story: 'Story',
+  missable: 'Missable',
+  collectibles: 'Collectibles',
+  activities: 'Activities',
+  online: 'Online',
+};
+
+// A trophy's kind for the filter buttons. "missable" is a flag, not a kind:
+// the Missable button shows every trophy whose missable flag is set.
 export function matchesKind(trophy, kind) {
   if (kind === 'all') return true;
   if (kind === 'missable') return trophy.missable === true;
-  if (kind === 'online') return false;
+  if (kind === 'online') return trophy.kind === 'online';
   return trophy.kind === kind;
-}
-
-export function matchesSearch(trophy, query) {
-  const q = query.trim().toLowerCase();
-  if (!q) return true;
-  const haystack = [trophy.name, trophy.description, trophy.guide, trophy.time ?? '', `difficulty ${trophy.difficulty ?? ''}`, ...(trophy.tags ?? [])].join(' ').toLowerCase();
-  return q.split(/\s+/).every((word) => haystack.includes(word));
 }
 
 export function matchesGrade(trophy, grade) {
   return grade === 'all' || trophy.grade === grade;
 }
 
-export function matchesDifficulty(trophy, difficulty) {
-  return difficulty === 'all' || String(trophy.difficulty ?? '') === difficulty;
+// Search across the name, the official description and the guide text.
+export function matchesQuery(trophy, query) {
+  const needle = query.trim().toLowerCase();
+  if (!needle) return true;
+  const haystack = [trophy.name, trophy.description, trophy.guide, trophy.kind]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+  return needle.split(/\s+/).every((word) => haystack.includes(word));
 }
 
-export function isSpoilerHidden(trophy, spoilerOn, earnedSet) {
-  return spoilerOn && trophy.hidden === true && !earnedSet.has(trophy.name);
+// Apply the whole filter state at once. Returns the trophies to show.
+export function filterTrophies(trophies, state) {
+  return trophies.filter(
+    (trophy) =>
+      matchesKind(trophy, state.kind) &&
+      matchesGrade(trophy, state.grade) &&
+      matchesQuery(trophy, state.query),
+  );
 }
 
-export function displayName(trophy, spoilerOn, earnedSet) {
-  return isSpoilerHidden(trophy, spoilerOn, earnedSet) ? 'Hidden trophy' : trophy.name;
+// The spoiler rule: with spoilers hidden, a story trophy that has not been
+// earned yet shows a mask instead of its name, description and guide.
+// Hidden (PlayStation-hidden) non-story trophies are shown: the setting hides
+// story spoilers, and the hidden badge already says a trophy is secret.
+export function isSpoilerMasked(trophy, earned, spoilerOn) {
+  return spoilerOn === true && trophy.kind === 'story' && !earned.has(trophy.id);
 }
 
-export function displayDescription(trophy, spoilerOn, earnedSet) {
-  return isSpoilerHidden(trophy, spoilerOn, earnedSet)
-    ? 'Hidden until earned — tick it off or switch the spoiler setting off to reveal it.'
-    : trophy.description;
-}
-
-export function applyFilters(trophies, { kind, query, grade, difficulty, hideEarned, spoilerOn, earnedSet }) {
-  return trophies.filter((t) => {
-    if (kind === 'online') return false;
-    if (!matchesKind(t, kind)) return false;
-    if (!matchesGrade(t, grade)) return false;
-    if (!matchesDifficulty(t, difficulty)) return false;
-    if (!matchesSearch(t, query)) return false;
-    if (hideEarned && earnedSet.has(t.name)) return false;
-    return true;
-  });
+// Count earned trophies per kind for the progress line.
+export function countByKind(trophies, earned) {
+  const counts = { story: [0, 0], collectibles: [0, 0], activities: [0, 0], online: [0, 0] };
+  for (const trophy of trophies) {
+    const slot = counts[trophy.kind];
+    if (!slot) continue;
+    slot[1] += 1;
+    if (earned.has(trophy.id)) slot[0] += 1;
+  }
+  return counts;
 }

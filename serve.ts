@@ -1,22 +1,21 @@
-// Development server for the guide: serves app/ on http://localhost:8080 so it can be tried
-// in a desktop browser and screenshotted. Node 22, standard library only; run it with
-// `node serve.ts` (or `node serve.ts --port <n>` for another port). It only reads files under
-// app/, sends the MIME types a browser needs, and refuses paths that escape the folder.
-// This is a local convenience, not a server for the internet. On start it reads
-// app/data/trophies.json and reports how many trophies it will serve, so a broken
-// data file is noticed before the browser opens.
-import { createReadStream, readFileSync, statSync } from 'node:fs';
+// A small static server for developing Leonida Legend: it serves the app/
+// folder on http://localhost:8080 so the guide can be tried in a desktop
+// browser exactly as a plain static host would serve it. Node 22, standard
+// library only. Pass --port <n> for another port. This is a local convenience,
+// not a server for the internet: it refuses every path outside app/.
+
+import { createReadStream, statSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { extname, join, normalize, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const appRoot = resolve(fileURLToPath(new URL('./app', import.meta.url)));
-const argv = process.argv.slice(2);
-const portFlag = argv.indexOf('--port');
-const wanted = portFlag === -1 ? 8080 : Number(argv[portFlag + 1]);
+const cliArgs = process.argv.slice(2);
+const portFlag = cliArgs.indexOf('--port');
+const wanted = portFlag === -1 ? 8080 : Number(cliArgs[portFlag + 1]);
 const port = Number.isInteger(wanted) && wanted > 0 && wanted < 65536 ? wanted : 8080;
 
-const TYPES: Record<string, string> = {
+const TYPES = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
   '.mjs': 'text/javascript; charset=utf-8',
@@ -28,45 +27,40 @@ const TYPES: Record<string, string> = {
   '.jpeg': 'image/jpeg',
   '.webp': 'image/webp',
   '.ico': 'image/x-icon',
-  '.woff2': 'font/woff2',
-  '.webmanifest': 'application/manifest+json',
 };
 
-createServer((req, res) => {
-  const url = new URL(req.url ?? '/', 'http://localhost');
-  let path: string;
+const server = createServer((request, response) => {
+  const requestUrl = new URL(request.url ?? '/', 'http://localhost');
+  let pathname;
   try {
-    path = decodeURIComponent(url.pathname);
+    pathname = decodeURIComponent(requestUrl.pathname);
   } catch {
-    res.writeHead(400).end('bad request');
+    response.writeHead(400).end('bad request');
     return;
   }
-  if (path.endsWith('/')) path += 'index.html';
-  const file = resolve(join(appRoot, normalize(path)));
+  if (pathname.endsWith('/')) pathname += 'index.html';
+  const file = resolve(join(appRoot, normalize(pathname)));
   if (file !== appRoot && !file.startsWith(appRoot + sep)) {
-    res.writeHead(403).end('forbidden');
+    response.writeHead(403).end('forbidden');
     return;
   }
-  let bytes: number;
+  let size;
   try {
     const info = statSync(file);
     if (!info.isFile()) throw new Error('not a file');
-    bytes = info.size;
+    size = info.size;
   } catch {
-    res.writeHead(404).end('not found');
+    response.writeHead(404).end('not found');
     return;
   }
-  res.writeHead(200, {
+  response.writeHead(200, {
     'content-type': TYPES[extname(file).toLowerCase()] ?? 'application/octet-stream',
-    'content-length': bytes,
+    'content-length': size,
     'cache-control': 'no-store',
   });
-  createReadStream(file).pipe(res);
-}).listen(port, '127.0.0.1', () => {
-  let trophyCount = '?';
-  try {
-    const data = JSON.parse(readFileSync(join(appRoot, 'data', 'trophies.json'), 'utf8'));
-    trophyCount = String((Array.isArray(data) ? data : data.trophies).length);
-  } catch {}
-  console.log(`app/ is on http://localhost:${port} (${trophyCount} trophies)`);
+  createReadStream(file).pipe(response);
+});
+
+server.listen(port, '127.0.0.1', () => {
+  console.log(`Leonida Legend is on http://localhost:${port}`);
 });
