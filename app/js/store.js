@@ -1,6 +1,9 @@
 // Progress store: the earned set lives in localStorage and moves as a JSON file.
+// The keys stay at v1 so a reader's saved ticks survive the v2 update; the
+// exported file carries format v2 and the app version, and v1 files still import.
 export const PROGRESS_KEY = 'leonida-legend-progress-v1';
 export const SETTINGS_KEY = 'leonida-legend-settings-v1';
+export const PROGRESS_FORMAT = 'leonida-legend-progress-v2';
 
 export function loadProgress() {
   try {
@@ -29,7 +32,7 @@ export function saveSettings(settings) {
 }
 
 export function exportProgressFile(earnedSet) {
-  const payload = JSON.stringify({ game: 'Grand Theft Auto VI', exportedAt: new Date().toISOString(), earned: [...earnedSet].sort() }, null, 2);
+  const payload = JSON.stringify({ format: PROGRESS_FORMAT, game: 'Grand Theft Auto VI', exportedAt: new Date().toISOString(), earned: [...earnedSet].sort() }, null, 2);
   const url = URL.createObjectURL(new Blob([payload], { type: 'application/json' }));
   const link = document.createElement('a');
   link.href = url;

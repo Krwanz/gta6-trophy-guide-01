@@ -2,8 +2,10 @@
 // in a desktop browser and screenshotted. Node 22, standard library only; run it with
 // `node serve.ts` (or `node serve.ts --port <n>` for another port). It only reads files under
 // app/, sends the MIME types a browser needs, and refuses paths that escape the folder.
-// This is a local convenience, not a server for the internet.
-import { createReadStream, statSync } from 'node:fs';
+// This is a local convenience, not a server for the internet. On start it reads
+// app/data/trophies.json and reports how many trophies it will serve, so a broken
+// data file is noticed before the browser opens.
+import { createReadStream, readFileSync, statSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { extname, join, normalize, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -61,5 +63,10 @@ createServer((req, res) => {
   });
   createReadStream(file).pipe(res);
 }).listen(port, '127.0.0.1', () => {
-  console.log(`app/ is on http://localhost:${port}`);
+  let trophyCount = '?';
+  try {
+    const data = JSON.parse(readFileSync(join(appRoot, 'data', 'trophies.json'), 'utf8'));
+    trophyCount = String((Array.isArray(data) ? data : data.trophies).length);
+  } catch {}
+  console.log(`app/ is on http://localhost:${port} (${trophyCount} trophies)`);
 });

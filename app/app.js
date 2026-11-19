@@ -18,6 +18,7 @@ const detailEmpty = document.getElementById('detailEmpty');
 const detailCard = document.getElementById('detailCard');
 const searchInput = document.getElementById('search');
 const gradeFilter = document.getElementById('gradeFilter');
+const difficultyFilter = document.getElementById('difficultyFilter');
 const hideEarnedBox = document.getElementById('hideEarned');
 const spoilerBox = document.getElementById('spoilerToggle');
 const filterNote = document.getElementById('filterNote');
@@ -41,8 +42,8 @@ function renderProgress() {
     `Platinum ${counts.platinum[0]}/${counts.platinum[1]} · Gold ${counts.gold[0]}/${counts.gold[1]} · Silver ${counts.silver[0]}/${counts.silver[1]} · Bronze ${counts.bronze[0]}/${counts.bronze[1]}`;
   const next = nextUpTrophy(trophies, earned);
   document.getElementById('nextUp').textContent = next
-    ? (spoilerBox.checked && next.trophy.kind === 'story'
-      ? `Next up: a hidden story trophy — ${next.stage}.`
+    ? (isSpoilerHidden(next.trophy, spoilerBox.checked, earned)
+      ? `Next up: a hidden trophy — ${next.stage}.`
       : `Next up: ${next.trophy.name} — ${next.stage}.`)
     : 'All 55 earned — Vice Got a Price! is yours, Leonida Legend.';
 }
@@ -68,6 +69,7 @@ function renderList() {
     kind: activeKind,
     query: searchInput.value,
     grade: gradeFilter.value,
+    difficulty: difficultyFilter.value,
     hideEarned: hideEarnedBox.checked,
     spoilerOn: spoilerBox.checked,
     earnedSet: earned,
@@ -106,10 +108,28 @@ function renderList() {
     gradeTag.className = `tag grade-${trophy.grade}`;
     gradeTag.textContent = trophy.grade;
     meta.append(gradeTag);
+    if (trophy.difficulty != null) {
+      const diffTag = document.createElement('span');
+      diffTag.className = 'tag';
+      diffTag.textContent = `Difficulty ${trophy.difficulty}/5`;
+      meta.append(diffTag);
+    }
+    if (trophy.time) {
+      const timeTag = document.createElement('span');
+      timeTag.className = 'tag';
+      timeTag.textContent = trophy.time;
+      meta.append(timeTag);
+    }
+    if (trophy.hidden) {
+      const hiddenTag = document.createElement('span');
+      hiddenTag.className = 'tag';
+      hiddenTag.textContent = 'Hidden';
+      meta.append(hiddenTag);
+    }
     if (trophy.missable) {
       const flag = document.createElement('span');
       flag.className = 'tag missable';
-      flag.textContent = 'Missable';
+      flag.textContent = 'Possibly missable';
       meta.append(flag);
     }
     const kindTag = document.createElement('span');
@@ -139,13 +159,16 @@ function renderDetail() {
   detailCard.hidden = false;
   document.getElementById('detailMedal').className = `medal ${trophy.grade}`;
   document.getElementById('detailGrade').textContent = trophy.grade;
-  document.getElementById('detailKind').textContent = `· ${trophy.kind}${trophy.missable ? ' · missable' : ''}`;
+  document.getElementById('detailKind').textContent = `· ${trophy.kind}${trophy.hidden ? ' · hidden on PSN' : ''}${trophy.missable ? ' · possibly missable' : ''}`;
+  document.getElementById('detailEstimates').textContent = hidden
+    ? ''
+    : `Difficulty ${trophy.difficulty ?? '—'}/5 · Time ${trophy.time ?? '—'} — this guide's own estimates, from PowerPyx's roadmap (story 60–80 h, 100% cleanup about 100 h, strands about 10 h).`;
   document.getElementById('detailName').textContent = hidden ? 'Hidden story trophy' : trophy.name;
   document.getElementById('detailDesc').textContent = hidden
     ? 'Hidden until earned — the spoiler setting is on.'
     : trophy.description;
   document.getElementById('detailFlags').textContent = trophy.missable
-    ? `⚠ Missable — ${MISSABLE_REASONS[trophy.id] ?? 'keep a manual save.'}`
+    ? `⚠ Possibly missable — ${MISSABLE_REASONS[trophy.id] ?? 'keep a manual save.'}`
     : '';
   document.getElementById('detailGuide').textContent = hidden
     ? 'The guide is hidden with the spoiler setting. Earn this trophy, or switch the spoiler setting off, to read it.'
@@ -178,8 +201,10 @@ function renderDetail() {
   document.getElementById('detailVerified').textContent = hidden
     ? ''
     : trophy.verified === 'reported'
-      ? 'How this is checked: reported — the facts above cite the named guides beside them.'
-      : 'How this is checked: from the official description — our own advice, not yet checked in the game.';
+      ? 'How this is checked: reported — the facts above cite the named launch guides beside them (PowerPyx, Push Square, GTABase).'
+      : trophy.verified === 'unconfirmed'
+        ? 'How this is checked: unconfirmed — PowerPyx lists this trophy\u2019s trigger as currently unknown, so this guide states no method for it.'
+        : 'How this is checked: from the official description — our own advice, not yet checked in the game.';
   const earnedBox = document.getElementById('detailEarned');
   earnedBox.checked = earned.has(trophy.name);
   earnedBox.onchange = () => toggleEarned(trophy.name);
@@ -272,6 +297,7 @@ for (const chip of document.querySelectorAll('.chip')) {
 }
 searchInput.addEventListener('input', renderList);
 gradeFilter.addEventListener('change', renderList);
+difficultyFilter.addEventListener('change', renderList);
 hideEarnedBox.addEventListener('change', renderList);
 spoilerBox.addEventListener('change', () => {
   saveSettings({ ...settings, spoiler: spoilerBox.checked });

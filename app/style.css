@@ -1,4 +1,7 @@
-/* Leonida Legend — GTA VI trophy guide. Paper look, one coral accent, medal swatches. */
+/* Leonida Legend — GTA VI trophy guide. Paper look, one coral accent, medal swatches.
+   v2: launch-day reporting (PowerPyx, Push Square, GTABase, 18-19 Nov 2026) — the
+   missable count is 1, hidden is 28, and every trophy carries a difficulty and
+   time estimate of its own. */
 :root {
   --paper: #f6f3ee;
   --card: #ffffff;
@@ -112,6 +115,8 @@ button.quiet { background: transparent; color: var(--ink); border-color: var(--l
 .detail-grade .medal { margin-top: 0; width: 18px; height: 18px; }
 .detail-kind { color: var(--muted); font-weight: 400; text-transform: none; }
 .detail-desc { color: var(--muted); font-style: italic; }
+.detail-estimates { font-size: 0.92rem; font-weight: 700; color: var(--ink); background: var(--accent-soft); border-radius: var(--radius-sm); padding: 8px 10px; }
+.detail-estimates:empty { display: none; }
 .detail-flags { font-weight: 700; color: #a33; }
 .detail-flags:empty { display: none; }
 .detail-verified { font-size: 0.9rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 10px; }
